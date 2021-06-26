@@ -14,12 +14,17 @@ class AuthController extends Controller
         $this->middleware('auth:api',['except'=>['login','resgister']]);
     }
 
-    public function login(UserValidation $request){
-             $validator = $request->validated();
-
-            
+    public function login(Request $request){
+             //$validator = $request->validated();
+             $validator = Validator::make(
+                 $request->all(),[
+                     'email'=> 'required|email|unique:users',
+                     'password'=> 'required'
+                 ]
+             );
+              
              if($validator->fails()){
-                 return reponse()->json($validator->errors(), 400);
+                 return response()->json($validator->errors(), 400);
              }
 
              $token_validity = (24*60);
