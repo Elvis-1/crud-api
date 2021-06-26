@@ -27,10 +27,11 @@ class UserFactory extends Factory
             'middleName' => $this->faker->name(),
             'lastName' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            'phoneNumber'=>$this->faker->unique()->interger(),
-            'picture_url'=> $this->faker->string(),
+            'phoneNumber'=>$this->faker->sentence(),
+            'picture_url'=> $this->faker->sentence(),
             'email_verified_at' => now(),
             'password' => 'elvis', // password
+            'is_disabled'=> rand(0,1),
             'remember_token' => Str::random(10),
 
         ];
