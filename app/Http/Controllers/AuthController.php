@@ -6,19 +6,19 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\UserValidation;
+
 
 class AuthController extends Controller
 {
-    public function __construct(){
-        $this->middleware('auth:api',['except'=>['login','resgister']]);
+    public function  __construct(){
+        $this->middleware('auth:api', ['except'=>['login','register']]);
     }
 
     public function login(Request $request){
              //$validator = $request->validated();
              $validator = Validator::make(
                  $request->all(),[
-                     'email'=> 'required|email|unique:users',
+                     'email'=> 'required|email',
                      'password'=> 'required'
                  ]
              );
@@ -27,7 +27,7 @@ class AuthController extends Controller
                  return response()->json($validator->errors(), 400);
              }
 
-             $token_validity = (24*60);
+             $token_validity = 24 * 60;
                $this->guard()->factory()->setTTL($token_validity);
 
                if(!$token = $this->guard()->attempt($validator->validated())){
@@ -39,16 +39,14 @@ class AuthController extends Controller
 
     }
 
-    public function register(){
+    public function register(Request $request){
         $validator = Validator::make(
             $request->all(),[
-                'firstName' => 'required|string|between2,100',
-                'middleName' => 'required|string|between2,100',
-                'lastName' => 'required|string|between2,100',
-                'email'=> 'required|email',
-                'password'=> 'required|confirmed|min:6',
-                'phoneNumber'=> 'required|integer',
-                'picture_url'=> 'required|string',
+                'firstName' => 'required|string|between:2,100',
+                'middleName' => 'required|string|between:2,100',
+                'lastName' => 'required|string|between:2,100',
+                'email'=> 'required|email|unique:users',
+                'password'=> 'required|confirmed|min:5',
                 
             ]
         );
